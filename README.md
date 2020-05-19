@@ -21,3 +21,82 @@ Working With Pods
   - Once all containers are up, pod state changes to `Running`. Incase of failure, pod goes to `Failed` state.
   - Failed, stopped Pods can't be restarted. They are discarded and new ones are started inplace of failed nodes.
   
+  <img src="pod_lifecycle.png" alt="pod_lifecycle" align="middle" width="70%">
+  
+Deploying pods with Manifest
+-
+- Please see the sample manifest file.
+
+		--- 
+		apiVersion: v1
+		Kind: Pod
+		metadata: 
+		  name: hello-pod
+		    labels:
+			  zone: prod
+			  version: v1
+		spec: 
+		  containers: 
+			- name: hello-ctr
+			  image: "nigelpoulton/pluralsight-docker-ci:latest"
+			  ports: 
+				- name: hello-ctr
+				  containerPort: 8080
+  
+- `apiVersion` refers to version of kubernetes apiserver rest objects.
+- `Kind` defines what kind of an object to deploy on the cluster. `Kind` helps to use the same command to work with kubernetes for different kinds of objects.
+- `metadata` used to define metadata for the pod like name of the pod, environment, version etc.
+- `spec` section defines the pod.
+   - `containers` section to define one or more containers.
+	 - `name` section defines the name of the container
+	 - `image` defines the image that is used to run the container.
+	 - `containerPort` is the port to be exposed on the container.
+- save the manifest file, say `pod.yml`.	 
+- To run the pod on kubernetes cluster, use the command `kubectl create -f pod.yml`
+- To view all the pods running use the command `kubectl get pods`.
+- To view the pod information in detail `kubectl describe pods`.
+- To view the pod information of a specific pod `kubectl get pods/${pod-name}`. For ex: `kubectl get pods/hello-pod`.
+- To view all the pods in all namespaces including system pods, use `kubectl get pods --all-namespaces`.
+- To delete a pod `kubectl delete pods ${pod-name}`.
+
+Working with Replication Controllers
+-
+- If an application needs to scaled up, it's tough to manage pods.
+- Replication controllers implements desired state. 
+- Replication controller deployment specifies the pod and define the desired state which represents the no of replica's of the pod.
+- Kubernetes continuously monitor the actual state and desired state to be equal.
+- Let's see a sample manifest file.
+
+			apiVersion: v1
+			kind: ReplicationController
+			metadata:
+			  name: hello-rc
+			spec:
+			  replicas: 5
+			  selector:
+				app: hello-world
+			  template:
+				metadata:
+				  labels:
+					app: hello-world
+				spec:
+				  containers:
+				  - name: hello-ctr
+					image: nigelpoulton/pluralsight-docker-ci:latest
+					ports:
+					- containerPort: 8080
+
+- Kind defines `ReplicationController` the type of rest object.
+- metadata defines the metadata like name of replication controller.
+- spec defines two main configuration elements.
+  - `replicas` define no of replicas.
+  - `selector.app` define to choose the app(or pod)
+- template defines the template for the app(or pod)
+  - metadata defines the metadata like name of the app(or pod). This should match the above `selector.app` configuration.
+  - container spec is the same as pod configuration defined in the pod example.
+
+Updating ReplicationController
+-
+- If we want to change the version of the application or no of replicas etc, change them in yaml or json configuration file and run the command `kubectl apply -f ${manifest-file}`.
+- To view all replication controllers `kubectl get rc`.
+
