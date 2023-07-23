@@ -6,7 +6,7 @@ Working With Pods
 - Pod is a highlevel construct than a container, but it is much simpler(or smaller) than a VM.
 - A pod consists of one or more containers. If multiple services need to be coupled, then having multiple containers in a pod is better.
 - We deploy a pod to a cluster by defining it in a manifest file. Manifest file is passed to the api-server using cli to the scheduler. Scheduler deploy the pods to a node.
-- Depending on the manifest file, a pod may container one or more containers.
+- Depending on the manifest file, a pod may contain one or more containers.
 - A pod gets a single ip, irrespective of how many containers are present in the pod. So, ports have to be unique between the containers.
 - All the containers in a pod share the same cgroup limit, access to same volumes, same network, ipc namespaces etc.
 - Inter-pod communication is possible because all pod ipaddresses are routable on the pod network.
