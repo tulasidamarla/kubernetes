@@ -1,9 +1,9 @@
 # kubernetes
 
-Working With Pods
--
+## Pods
+
 - In Virtualization world the atomic unit of scheduling is `VM`, in docker it is the `container`, whereas in kubernetes it is `pod`.
-- Pod is a highlevel construct than a container, but it is much simpler(or smaller) than a VM.
+- Pod is a high level construct than a container, but it is much simpler(or smaller) than a VM.
 - A pod consists of one or more containers. If multiple services need to be coupled, then having multiple containers in a pod is better.
 - We deploy a pod to a cluster by defining it in a manifest file. Manifest file is passed to the api-server using cli to the scheduler. Scheduler deploy the pods to a node.
 - Depending on the manifest file, a pod may contain one or more containers.
@@ -12,7 +12,7 @@ Working With Pods
 - Inter-pod communication is possible because all pod ipaddresses are routable on the pod network.
 - Intra-pod communication happens directly through `localhost` interface.
 - Deployment in a pod is atomic. If 2 containers are present in a pod, then a pod will be accessible only when both containers are up and running.
-- Lifecyle of Pod
+- Lifecycle of Pod
   - Define the manifest.
   - Send the manifest to api server.
   - Api server schedules it to a node.
@@ -23,8 +23,8 @@ Working With Pods
   
   <img src="pod_lifecycle.png" alt="pod_lifecycle" align="middle" width="70%">
   
-Deploying pods with Manifest
--
+## Deploying pods with Manifest
+
 - Please see the sample manifest file.
 
 		--- 
@@ -59,44 +59,10 @@ Deploying pods with Manifest
 - To view all the pods in all namespaces including system pods, use `kubectl get pods --all-namespaces`.
 - To delete a pod `kubectl delete pods ${pod-name}`.
 
-Working with Replication Controllers
--
-- If an application needs to scaled up, it's tough to manage pods.
-- Replication controllers implements desired state. 
-- Replication controller deployment specifies the pod and define the desired state which represents the no of replica's of the pod.
-- Kubernetes continuously monitor the actual state and desired state to be equal.
-- Let's see a sample manifest file.
+## Tools
 
-			apiVersion: v1
-			kind: ReplicationController
-			metadata:
-			  name: hello-rc
-			spec:
-			  replicas: 5
-			  selector:
-				app: hello-world
-			  template:
-				metadata:
-				  labels:
-					app: hello-world
-				spec:
-				  containers:
-				  - name: hello-ctr
-					image: nigelpoulton/pluralsight-docker-ci:latest
-					ports:
-					- containerPort: 8080
+- kubectl is command line tool to interact with api server.
+- minikube, kubeadm tools help to run local kubernetes cluster.
+- If managed clusters like GKE, AKS or EKS no need of minikube, kubeadm. kubectl is enough.
 
-- Kind defines `ReplicationController` the type of rest object.
-- metadata defines the metadata like name of replication controller.
-- spec defines two main configuration elements.
-  - `replicas` define no of replicas.
-  - `selector.app` define to choose the app(or pod)
-- template defines the template for the app(or pod)
-  - metadata defines the metadata like name of the app(or pod). This should match the above `selector.app` configuration.
-  - container spec is the same as pod configuration defined in the pod example.
-
-Updating ReplicationController
--
-- If we want to change the version of the application or no of replicas etc, change them in yaml or json configuration file and run the command `kubectl apply -f ${manifest-file}`.
-- To view all replication controllers `kubectl get rc`.
-
+[Next: big picture](1.big_picture.md)
