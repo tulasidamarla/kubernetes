@@ -37,11 +37,11 @@
 			  version: v1
 		spec: 
 		  containers: 
-			- name: hello-ctr
-			  image: "nigelpoulton/pluralsight-docker-ci:latest"
-			  ports: 
-				- name: hello-ctr
-				  containerPort: 8080
+		  - name: hello-ctr
+		    image: "nigelpoulton/pluralsight-docker-ci:latest"
+		    ports: 
+		    - name: hello-ctr
+		      containerPort: 8080
   
 - `apiVersion` refers to version of kubernetes apiserver rest objects.
 - `Kind` defines what kind of an object to deploy on the cluster. `Kind` helps to use the same command to work with kubernetes for different kinds of objects.
